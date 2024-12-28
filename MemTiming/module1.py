@@ -1,4 +1,4 @@
-#memory timing helper
+#memory timing helper v1.01
 from tkinter import *
 import tkinter as tk
 
@@ -32,6 +32,7 @@ tT  = 0
 aCL = 0
 aRCD= 0
 aRP = 0
+
 refreshscreen = 0
 Label(r, text='Memory Speed Settings Calculator ',anchor=tk.E, bg=default_bg, height=2, width=40, bd=3, font=("Arial", 12, "bold"), cursor="hand2", fg="black", padx=0,pady=0).grid(row=1,column=0,columnspan=4)
 Label(r, text='Default',anchor=tk.E, bg=default_bg, height=2, width=14, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="black", padx=0,pady=0).grid(row=2,column=0)
@@ -50,6 +51,7 @@ pc9 = Label(r,text="tRRD" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, 
 pc10= Label(r,text="tWTR" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="green", padx=0, pady=0)
 pc11= Label(r,text="tRPT" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="green", padx=0, pady=0)
 pc12= Label(r,text="tFAW" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="green", padx=0, pady=0)
+pc13= Label(r,text="tCWL" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="green", padx=0, pady=0)
 #placholders
 c1 = Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="blue", padx=0, pady=0)
 c2 = Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="blue", padx=0, pady=0)
@@ -63,6 +65,7 @@ c9 = Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font
 c10= Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="red", padx=0, pady=0)
 c11= Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="red", padx=0, pady=0)
 c12= Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="red", padx=0, pady=0)
+c13= Label(r,text="-" ,anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10), cursor="hand2", fg="red", padx=0, pady=0)
 Label(r, text='tCL ',anchor=tk.E, bg=default_bg, height=2, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="red", padx=1,pady=1).grid(row=3)
 Label(r, text='tRCD',anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="blue", padx=0, pady=0).grid(row=4)
 Label(r, text='tRP',anchor=tk.E, bg=default_bg, height=1, width=5, bd=3, font=("Arial", 10, "bold"), cursor="hand2", fg="blue", padx=0, pady=0).grid(row=5)
@@ -93,6 +96,8 @@ pc11.grid(row=13,column=3)
 c11.grid(row=13,column=4)
 pc12.grid(row=14,column=3)
 c12.grid(row=14,column=4)
+pc13.grid(row=15,column=3)
+c13.grid(row=15,column=4)
 def update_window(event=None):
     e1 = Entry(r,bd=2,width=2,textvariable = text_tCL)
     e2 = Entry(r,bd=2,width=2,textvariable = text_tRCD)
@@ -138,7 +143,7 @@ def update_window(event=None):
     tempn = text_tT.get()     
     if tempn.isdigit() : atT=int(tempn)
     #Assign c_ overclock variables to zero
-    c_tRAS = c_tRC = c_tRP = c_tRCD = c_tCL = c_tWR = c_tRFC = c_tRRDf = c_tWTR = c_tRRD = c_tWTR = c_tRPT = 0
+    c_tRAS = c_tRC = c_tRP = c_tRCD = c_tCL = c_tWR = c_tRFC = c_tRRDf = c_tWTR = c_tRRD = c_tWTR = c_tRPT = c_tCWL = 0
     if aCL> 0 :   c_tCL  = aCL
     if aRP > 0 :  c_tRP  = aRP
     if aRCD > 0 : c_tRCD = aRCD
@@ -172,7 +177,7 @@ def update_window(event=None):
     if c_tRC > 0 : c5.config(text = str(c_tRC))
     #Caclulate tWR force Even
     if c_tRRD > 0 and c_tWTR > 0 : c_tWR = c_tWTR + c_tRRD
-    if (c_tWR / 2) > 0 and (atT /2) >= 1.0: c_tWR += 1 # make tWR even
+    if (float(c_tWR / 2.0) - int(c_tWR / 2)) > 0 and (atT /2) >= 1.0: c_tWR += 1 # make tWR even if tWR not Even and setting is T2
     if c_tWR > 0 : 
         c6.config(text = str(c_tWR))
         c12.config(text = str(c_tRRD * 4)) #tFAW
@@ -188,6 +193,11 @@ def update_window(event=None):
     if c_tRC > 0 : c_tRFC = 8 * c_tRC
     if c_tRFC > 0 : c7.config(text = str(c_tRFC))
 
+
+    #final setting 10 tCL (set tCWL=tCL if tCL is even and tCWL= tCL-1 by one clk if tCL is odd) 
+    if (float(c_tCL / 2.0) - int(c_tCL / 2)) > 0 : c_tCWL = c_tCL - 1
+    else : c_tCWL = c_tCL
+    if c_tCWL > 0 : c13.config(text = str(c_tCWL))
     if refreshscreen == 1:
        button = tk.Button(r, text='Update', width=14, command=update_window)
        button.grid(row=30, column=2)
