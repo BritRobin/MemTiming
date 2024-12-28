@@ -1,4 +1,4 @@
-#memory timing helper v1.01
+#memory timing helper v1.02
 from tkinter import *
 import tkinter as tk
 
@@ -133,7 +133,7 @@ def update_window(event=None):
     tempn = text_tCL.get()
     if tempn.isdigit() : tCL=int(tempn)
     #Altered Values
-    aCL = aRP = aRCD = 0;
+    aCL = aRP = aRCD = atT = 0;
     tempn = text_aCL.get()
     if tempn.isdigit() : aCL=int(tempn)
     tempn = text_aRP.get()
@@ -154,12 +154,15 @@ def update_window(event=None):
 
     #Display Command rate
     tempn = text_tT.get()
-    
     if tempn.isdigit() : c8.config(text = tempn)
-
+    
+    if(atT == 0 and tCL > 0) :
+       atT = 1 #if T = 0 default it to 1
+       c8.config(text = "1? !")
     #Calculate OC tRAS
     if c_tCL>0 and c_tRCD>0 and c_tRP>0 :
-       #c_tRAS = c_tRCD + c_tRP + c_tCL
+       if tRAS == 0 : tRAS = tRAS = tCL + tRCD + 6 # this would recrate my TRAS and seems a middle point in various TRAS formula (but it should be manually entered)
+ 
        #There isn't an actual formula for TRAS but tRCD + tCL + X(a delay to precharge) so we need to know the individual chips X
        #So original X = (Original TRAS - (RCD+CL)) then divide by oringinal CL and multiply by new CL and later round up
        c_tRRDf = (((tRAS - (tCL+tRCD))/tCL) * aCL)
