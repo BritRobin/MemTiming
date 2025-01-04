@@ -1,4 +1,4 @@
-#memory timing helper v1.02
+#memory timing helper v1.03
 from tkinter import *
 import tkinter as tk
 
@@ -166,7 +166,8 @@ def update_window(event=None):
        #There isn't an actual formula for TRAS but tRCD + tCL + X(a delay to precharge) so we need to know the individual chips X
        #So original X = (Original TRAS - (RCD+CL)) then divide by oringinal CL and multiply by new CL and later round up
        c_tRRDf = (((tRAS - (tCL+tRCD))/tCL) * aCL)
-       c_tRAS = int(aCL + aRCD + c_tRRDf + 0.4) # + 0.4 for round up on after CL RCD delay
+       if(c_tRRDf < 1) : c_tRRDf = (tCL / 3) * 2 #total guess work for wierd cases
+       c_tRAS = int(aCL + aRCD + c_tRRDf + 0.4)  # + 0.4 for round up on after CL RCD delay
        c4.config(text = str(c_tRAS))
        if c_tRRDf > 0 :
            c_tRRD = int(c_tRRDf)
